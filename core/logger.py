@@ -3,7 +3,7 @@ import os
 
 
 def setup_logger():
-    log_path = os.path.join(os.path.dirname(__file__), "../logs/client_bot_logs.log")
+    log_path = os.path.join(os.path.dirname(__file__), "../logs/admin_panel_logs.log")
 
     logging.basicConfig(
         level=logging.INFO,
