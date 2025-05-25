@@ -1,0 +1,6 @@
+.env
+.log
+/.venv/
+/logs/
+__*__
+/.idea/
