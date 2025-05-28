@@ -265,6 +265,7 @@ ORDER BY r.rating DESC;
             plt.legend(title="Оценки", labels=labels, loc="upper center", bbox_to_anchor=(0.5, -0.05), ncol=3)
             plt.tight_layout()
             plt.savefig("orders_rating.png")
+            plt.close()
             scene = QGraphicsScene()
             scene.addPixmap(QPixmap("orders_rating.png"))
             self._ui.orders_rating_diagram.setScene(scene)
