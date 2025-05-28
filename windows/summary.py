@@ -3,8 +3,11 @@ import webbrowser
 from functools import partial
 
 import psycopg as ps
-from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton
+from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton, QGraphicsScene
+from PySide6.QtGui import QPixmap
 from icecream import ic
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_qt import FigureCanvasQT
 from psycopg import sql
 
 from core import Database
@@ -37,6 +40,8 @@ class SummaryInfo(QMainWindow):
         self.get_deliveries_summary_info()
         self.get_couriers_summary_info()
         self.get_problematic_couriers_summary_info()
+        self.generate_categories_diagram()
+        self.generate_orders_diagram()
 
     def get_orders_summary_info(self):
         """
@@ -209,3 +214,59 @@ WHERE c.courier_rating < 4.10;"""
                     self._ui.problematic_couriers_summary.setItem(r_idx, c_idx, item)
 
         self._ui.problematic_couriers_summary.resizeColumnsToContents()
+
+    def generate_categories_diagram(self):
+        query = (sql.SQL(
+            """SELECT p.product_category, COUNT(o.order_id) 
+FROM product p
+LEFT JOIN added a ON p.product_article = a.product_article 
+LEFT JOIN "order" o ON o.order_id = a.order_id 
+GROUP BY product_category;"""))
+        try:
+            with self.connect.cursor() as cur:
+                data = cur.execute(query).fetchall()
+            x_axis = [item[0] for item in data]
+            y_axis = [item[1] for item in data]
+            plt.bar(x_axis, y_axis, label="Количество продаж")
+            plt.xlabel("Категории", fontsize=1)
+            plt.xticks(size=8)
+            plt.ylim(0, max(y_axis) + 2)
+            plt.ylabel("Количество продаж", fontsize=10)
+            plt.legend()
+            plt.title("Продажи по категориям")
+            plt.xticks(rotation=45, ha='right')
+            for i, v in enumerate(y_axis):
+                plt.text(i, v + 0.5, str(v), ha='center')
+
+            plt.tight_layout()
+            plt.savefig("categories.png")
+            plt.close()
+            scene = QGraphicsScene()
+            scene.addPixmap(QPixmap("categories.png"))
+            self._ui.categories_diagram.setScene(scene)
+        except ps.Error as p:
+            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+
+    def generate_orders_diagram(self):
+        query = (sql.SQL(
+            """SELECT r.rating, COUNT(d.delivery_id) AS count
+FROM generate_series(1, 5) AS r(rating)
+LEFT JOIN delivery d ON d.delivery_rating = r.rating
+GROUP BY r.rating
+ORDER BY r.rating DESC;
+            """
+        ))
+        try:
+            with self.connect.cursor() as cur:
+                data = cur.execute(query).fetchall()
+            labels = ['5 звезд', '4 звезды', '3 звезды', '2 звезды', '1 звезда']
+            values = [item[1] for item in data]
+            plt.pie(values, autopct='%1.1f%%')
+            plt.legend(title="Оценки", labels=labels, loc="upper center", bbox_to_anchor=(0.5, -0.05), ncol=3)
+            plt.tight_layout()
+            plt.savefig("orders_rating.png")
+            scene = QGraphicsScene()
+            scene.addPixmap(QPixmap("orders_rating.png"))
+            self._ui.orders_rating_diagram.setScene(scene)
+        except ps.Error as p:
+            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
