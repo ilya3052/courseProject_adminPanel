@@ -34,6 +34,7 @@ class SummaryInfo(QMainWindow):
 
     def setup_actions(self):
         self._ui.reports.triggered.connect(self.manager.show_reports)
+        self._ui.data.triggered.connect(self.manager.show_data)
 
     def show_info(self):
         self.get_orders_summary_info()
@@ -130,21 +131,26 @@ GROUP BY r.rating
 ORDER BY r.rating DESC;
             """
         ))
+        msg = 'Общая информация о рейтинге доставок\n'
         try:
             with self.connect.cursor() as cur:
                 data = cur.execute(query).fetchall()
                 if not self.count_of_deliveries:
                     self.count_of_deliveries = cur.execute("SELECT COUNT(*) FROM delivery").fetchone()[0]
+
+            for item in data:
+                ending = ("" if item[1] == 1 else
+                          "а" if item[1] in [2, 3, 4] else
+                          "ов")
+                msg += f'{item[0]} 🌟 - {item[1]} заказ{ending}, {round(item[1] / self.count_of_deliveries * 100, 2)}% от общего числа заказов\n'
+
         except ps.Error as p:
             logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+        except ZeroDivisionError:
+            msg += 'Еще не выполнено ни одной доставки'
 
-        msg = 'Общая информация о рейтинге доставок\n'
-        for item in data:
-            ending = ("" if item[1] == 1 else
-                      "а" if item[1] in [2, 3, 4] else
-                      "ов")
-            msg += f'{item[0]} 🌟 - {item[1]} заказ{ending}, {round(item[1] / self.count_of_deliveries * 100, 2)}% от общего числа заказов\n'
         self._ui.delivery_summary.setText(msg)
+
 
     def get_couriers_summary_info(self):
         """
@@ -227,16 +233,20 @@ GROUP BY product_category;"""))
                 data = cur.execute(query).fetchall()
             x_axis = [item[0] for item in data]
             y_axis = [item[1] for item in data]
-            plt.bar(x_axis, y_axis, label="Количество продаж")
-            plt.xlabel("Категории", fontsize=1)
-            plt.xticks(size=8)
-            plt.ylim(0, max(y_axis) + 2)
-            plt.ylabel("Количество продаж", fontsize=10)
-            plt.legend()
-            plt.title("Продажи по категориям")
-            plt.xticks(rotation=45, ha='right')
-            for i, v in enumerate(y_axis):
-                plt.text(i, v + 0.5, str(v), ha='center')
+            if sum(y_axis) == 0:
+                plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
+                plt.axis('off')  # Скрыть оси
+            else:
+                plt.bar(x_axis, y_axis, label="Количество продаж")
+                plt.xlabel("Категории", fontsize=1)
+                plt.xticks(size=8)
+                plt.ylim(0, max(y_axis) + 2)
+                plt.ylabel("Количество продаж", fontsize=10)
+                plt.legend()
+                plt.title("Продажи по категориям")
+                plt.xticks(rotation=45, ha='right')
+                for i, v in enumerate(y_axis):
+                    plt.text(i, v + 0.5, str(v), ha='center')
 
             plt.tight_layout()
             plt.savefig("categories.png")
@@ -261,7 +271,13 @@ ORDER BY r.rating DESC;
                 data = cur.execute(query).fetchall()
             labels = ['5 звезд', '4 звезды', '3 звезды', '2 звезды', '1 звезда']
             values = [item[1] for item in data]
-            plt.pie(values, autopct='%1.1f%%')
+            ic(values)
+            # return
+            if sum(values) == 0:
+                plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
+                plt.axis('off')  # Скрыть оси
+            else:
+                plt.pie(values, autopct='%1.1f%%')
             plt.legend(title="Оценки", labels=labels, loc="upper center", bbox_to_anchor=(0.5, -0.05), ncol=3)
             plt.tight_layout()
             plt.savefig("orders_rating.png")
