@@ -2,13 +2,14 @@ import logging
 
 import psycopg as ps
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout
+from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout, \
+    QAbstractItemView
 from icecream import ic
 from psycopg import sql
 
 from core import Database
 from windows_design import DataWindow
- 
+
 from core import *
 
 
@@ -67,6 +68,7 @@ class Data(QMainWindow):
         self.current_column = ()
         self.connect: ps.connect = Database.get_connection()
         self.data = []
+        self.old_cell_value = None
 
         self.search_timer = QTimer()
         self.search_timer.setInterval(500)
@@ -85,6 +87,9 @@ class Data(QMainWindow):
         self._ui.search_input.textChanged.connect(self.search_timer.start)
 
         self._ui.data_table.cellChanged.connect(self.cell_value_changed)
+        self._ui.data_table.cellDoubleClicked.connect(self.cell_double_clicked)
+
+        self._ui.data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         self._ui.data_table.verticalHeader().sectionDoubleClicked.connect(lambda x: self.vertical_header_click(x))
 
@@ -280,4 +285,27 @@ class Data(QMainWindow):
             msg.exec()
 
     def cell_value_changed(self, row, column):
-        ic(row, column)
+        table = self._ui.data_table
+        new_value = table.item(row, column).text()
+
+        header_data = table.horizontalHeader().model().headerData(column, Qt.Horizontal)
+        header_data = get_key_by_value(LOCALIZED_COLUMNS_NAME.get(self.current_table), header_data)
+        identifier = IDENTIFIERS.get(self.current_table)
+
+        identifier_value = table.item(row, 0).text()
+
+        try:
+            with self.connect.cursor() as cur:
+                query = (sql.SQL(
+                    "UPDATE {table} SET {column} = %s WHERE {identifier} = %s"
+                )).format(
+                    table=sql.Identifier(self.current_table),
+                    column=sql.Identifier(header_data),
+                    identifier=sql.Identifier(identifier)
+                )
+                cur.execute(query, (new_value, identifier_value,))
+                self.connect.commit()
+        except ps.Error as p:
+            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            table.item(row, column).setText(self.old_cell_value)
+            self.connect.rollback()
