@@ -328,3 +328,19 @@ class Data(QMainWindow):
             logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
             table.item(row, column).setText(self.old_cell_value)
             self.connect.rollback()
+
+    def cell_double_clicked(self, row, column):
+        header_data = self._ui.data_table.horizontalHeader().model().headerData(column, Qt.Horizontal)
+        header_data = get_key_by_value(LOCALIZED_COLUMNS_NAME.get(self.current_table), header_data)
+
+        if header_data in REDACT_IN_MODAL_WINDOW_MODE.get(self.current_table):
+            self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
+
+            # логика модального окна
+
+            self._ui.data_table.cellChanged.connect(self.cell_value_changed)
+        else:
+            item = self._ui.data_table.item(row, column)
+            if item:
+                self.old_cell_value = item.text()
+                self._ui.data_table.editItem(item)
