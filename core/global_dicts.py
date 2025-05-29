@@ -70,4 +70,9 @@ NON_EDITABLE_COLUMNS = {
     "order": ["client_id"],
 }
 
-REDACT_IN_MODAL_WINDOW_MODE = {}
+REDACT_IN_MODAL_WINDOW_MODE = {
+    "client": ["fullname"],
+    "courier": ["fullname"],
+    "delivery": ["courier"],
+    "order": ["client"],
+}
