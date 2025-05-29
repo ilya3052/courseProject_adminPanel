@@ -55,6 +55,7 @@ class Reports(QMainWindow):
         self._ui.generate_report.clicked.connect(self.generate_report_by_courier)
         self._ui.save_as_PDF.clicked.connect(self.generate_pdf_report)
         self._ui.problematic_couriers.triggered.connect(self.show_problematic_courier_report)
+        self._ui.data.triggered.connect(self.manager.show_data)
 
     def change_cur_courier(self):
         self.current_courier_id = get_key_by_index(self.couriers, self._ui.courier_listbox.currentIndex())
@@ -77,6 +78,8 @@ class Reports(QMainWindow):
             self.is_problematic_courier_report = False
         except ps.Error as p:
             logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+        except IndexError:
+            pass
 
     def get_couriers(self):
         try:
