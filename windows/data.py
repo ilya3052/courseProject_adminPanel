@@ -104,8 +104,8 @@ class Data(QMainWindow):
         try:
             with self.connect.cursor() as cur:
                 data = cur.execute(query).fetchall()
-
-            self.data = [[item or 'Не установлено' for item in row] for row in data]
+            self.data = [[item if isinstance(item, bool) or item is not None else 'Не установлено' for item in row] for
+                         row in data]
 
             self.clear_table()
             if not self.data:
@@ -286,10 +286,20 @@ class Data(QMainWindow):
 
     def cell_value_changed(self, row, column):
         table = self._ui.data_table
-        new_value = table.item(row, column).text()
+        new_value = table.item(row, column).text() if table.item(row, column).text() else None
 
         header_data = table.horizontalHeader().model().headerData(column, Qt.Horizontal)
         header_data = get_key_by_value(LOCALIZED_COLUMNS_NAME.get(self.current_table), header_data)
+
+        try:
+            if header_data == 'user_phonenumber':
+                if not new_value.isdigit() or len(new_value) != 11:
+                    raise BaseException("Новое значение не соответствует шаблону")
+        except BaseException as BE:
+            logging.exception(f"Произошла ошибка при обновлении значения: {BE}")
+            table.item(row, column).setText(self.old_cell_value)
+            return
+
         identifier = IDENTIFIERS.get(self.current_table)
 
         identifier_value = table.item(row, 0).text()
@@ -303,8 +313,17 @@ class Data(QMainWindow):
                     column=sql.Identifier(header_data),
                     identifier=sql.Identifier(identifier)
                 )
+
                 cur.execute(query, (new_value, identifier_value,))
                 self.connect.commit()
+
+            if not new_value:
+                self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
+
+                table.item(row, column).setText('Не установлено')
+                table.resizeColumnsToContents()
+
+                self._ui.data_table.cellChanged.connect(self.cell_value_changed)
         except ps.Error as p:
             logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
             table.item(row, column).setText(self.old_cell_value)
