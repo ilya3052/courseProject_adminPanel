@@ -71,8 +71,10 @@ NON_EDITABLE_COLUMNS = {
 }
 
 REDACT_IN_MODAL_WINDOW_MODE = {
+    "users": [],
     "client": ["fullname"],
     "courier": ["fullname"],
     "delivery": ["courier"],
+    "product": [],
     "order": ["client"],
 }
