@@ -75,7 +75,7 @@
     <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox_2">
       <property name="styleSheet">
-       <string notr="true">QGroupBox {border: none;}</string>
+       <string notr="true"/>
       </property>
       <property name="title">
        <string/>
@@ -83,6 +83,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
        <item>
         <widget class="QGroupBox" name="groupBox_4">
+         <property name="styleSheet">
+          <string notr="true">QGroupBox {border: none;}</string>
+         </property>
          <property name="title">
           <string/>
          </property>
@@ -153,7 +156,7 @@
      <string>Меню</string>
     </property>
     <addaction name="reports"/>
-    <addaction name="action_3"/>
+    <addaction name="data"/>
     <addaction name="action_4"/>
     <addaction name="separator"/>
     <addaction name="action_6"/>
@@ -177,7 +180,7 @@
     <string>Выход</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="data">
    <property name="text">
     <string>Данные</string>
    </property>

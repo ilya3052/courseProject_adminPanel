@@ -86,7 +86,7 @@
      <string>Меню</string>
     </property>
     <addaction name="summary"/>
-    <addaction name="action_2"/>
+    <addaction name="data"/>
     <addaction name="action_5"/>
     <addaction name="separator"/>
     <addaction name="action_4"/>
@@ -111,7 +111,7 @@
     <string>Ctrl+1</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="data">
    <property name="text">
     <string>Данные</string>
    </property>
