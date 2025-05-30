@@ -107,7 +107,13 @@ JOIN product p ON a.product_article = p.product_article;"""
                 total_amount_purchased_products = cur.execute(get_total_amount_purchased_products).fetchone()[0]
                 most_ordered_category = cur.execute(get_most_ordered_category).fetchall()
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
         msg = (f"Общая информация о заказах\n"
                f"Общее количество заказов в системе: {self.count_of_deliveries}\n"
@@ -145,7 +151,13 @@ ORDER BY r.rating DESC;
                 msg += f'{item[0]} 🌟 - {item[1]} заказ{ending}, {round(item[1] / self.count_of_deliveries * 100, 2)}% от общего числа заказов\n'
 
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
         except ZeroDivisionError:
             msg += 'Еще не выполнено ни одной доставки'
 
@@ -172,7 +184,13 @@ UNION ALL SELECT COUNT(*) FROM courier WHERE courier_rating < 4.10;
                     self.count_of_couriers = cur.execute("SELECT COUNT(*) FROM courier").fetchone()[0]
                 data = cur.execute(query).fetchall()
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
         data = [item[0] for item in data]
 
@@ -200,7 +218,13 @@ WHERE c.courier_rating < 4.10;"""
             with self.connect.cursor() as cur:
                 data = cur.execute(query).fetchall()
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
         if not data:
             return
@@ -255,7 +279,13 @@ GROUP BY product_category;"""))
             scene.addPixmap(QPixmap("categories.png"))
             self._ui.categories_diagram.setScene(scene)
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
     def generate_orders_diagram(self):
         query = (sql.SQL(
@@ -286,4 +316,10 @@ ORDER BY r.rating DESC;
             scene.addPixmap(QPixmap("orders_rating.png"))
             self._ui.orders_rating_diagram.setScene(scene)
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")

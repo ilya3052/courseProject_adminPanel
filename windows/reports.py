@@ -77,7 +77,13 @@ class Reports(QMainWindow):
             self._ui.reports_fields.resizeColumnsToContents()
             self.is_problematic_courier_report = False
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
         except IndexError:
             pass
 
@@ -89,7 +95,13 @@ class Reports(QMainWindow):
                 FROM courier c 
                 JOIN users u ON c.user_id = u.user_id;""").fetchall()
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
         self._ui.courier_listbox.clear()
         for item in self.data:
@@ -110,7 +122,13 @@ class Reports(QMainWindow):
                                         (self.current_courier_id,)).fetchall()
                 self.data = [[item for item in row[0]] for row in self.data]
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
         self._ui.reports_fields.setRowCount(len(self.data))
         self._ui.reports_fields.setColumnCount(len(self.data[0]))
 
@@ -133,7 +151,13 @@ class Reports(QMainWindow):
             self.data = [[item for item in data] for data in self.data]
             ic(self.data)
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
         if not self.data:
             return
