@@ -3,11 +3,11 @@ import webbrowser
 from functools import partial
 
 import psycopg as ps
+from PySide6.QtCore import QEvent
+from PySide6.QtGui import QPixmap, QShowEvent
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton, QGraphicsScene
-from PySide6.QtGui import QPixmap
 from icecream import ic
 from matplotlib import pyplot as plt
-from matplotlib.backends.backend_qt import FigureCanvasQT
 from psycopg import sql
 
 from core import Database
@@ -32,6 +32,7 @@ class SummaryInfo(QMainWindow):
         self.setup_actions()
         self.show_info()
 
+
     def setup_actions(self):
         self._ui.reports.triggered.connect(self.manager.show_reports)
         self._ui.data.triggered.connect(self.manager.show_data)
@@ -41,8 +42,11 @@ class SummaryInfo(QMainWindow):
         self.get_deliveries_summary_info()
         self.get_couriers_summary_info()
         self.get_problematic_couriers_summary_info()
-        self.generate_categories_diagram()
-        self.generate_orders_diagram()
+
+    async def order_notify(self, conn, pid, channel, payload):
+        self.get_orders_summary_info()
+        self.get_deliveries_summary_info()
+        self.get_couriers_summary_info()
 
     def get_orders_summary_info(self):
         """
@@ -103,7 +107,8 @@ JOIN product p ON a.product_article = p.product_article;"""
 
         try:
             with self.connect.cursor() as cur:
-                self.count_of_deliveries = cur.execute(get_count_of_deliveries).fetchone()[0]
+                count_of_deliveries = cur.execute(get_count_of_deliveries).fetchone()[0]
+                ic(count_of_deliveries)
                 total_amount_purchased_products = cur.execute(get_total_amount_purchased_products).fetchone()[0]
                 most_ordered_category = cur.execute(get_most_ordered_category).fetchall()
         except ps.Error as p:
@@ -116,11 +121,19 @@ JOIN product p ON a.product_article = p.product_article;"""
                               f"---------------------------------------")
 
         msg = (f"Общая информация о заказах\n"
-               f"Общее количество заказов в системе: {self.count_of_deliveries}\n"
+               f"Общее количество заказов в системе: {count_of_deliveries}\n"
                f"Общая сумма купленных товаров: {round(total_amount_purchased_products, 2)}\n"
                f"Наиболее часто заказываемая категория товаров: {', '.join([category[0] for category in most_ordered_category]) or "еще нет заказов"}\n")
 
+
         self._ui.orders_summary.setText(msg)
+        self.generate_categories_diagram()
+        self.generate_orders_diagram()
+
+    async def delivery_notify(self, conn, pid, channel, payload):
+        self.get_deliveries_summary_info()
+        self.get_couriers_summary_info()
+        self.get_problematic_couriers_summary_info()
 
     def get_deliveries_summary_info(self):
         """
@@ -162,7 +175,11 @@ ORDER BY r.rating DESC;
             msg += 'Еще не выполнено ни одной доставки'
 
         self._ui.delivery_summary.setText(msg)
+        self.generate_orders_diagram()
 
+    async def courier_notify(self, conn, pid, channel, payload):
+        self.get_couriers_summary_info()
+        self.get_problematic_couriers_summary_info()
 
     def get_couriers_summary_info(self):
         """
@@ -195,9 +212,9 @@ UNION ALL SELECT COUNT(*) FROM courier WHERE courier_rating < 4.10;
         data = [item[0] for item in data]
 
         msg = (f'Общая информация о курьерах\n'
-            f'Свободных курьеров - {data[0]}, {round(data[0] / self.count_of_couriers * 100, 2)}% от общего числа курьеров\n'
-            f'Занятых заказом курьеров - {data[1]}, {round(data[1] / self.count_of_couriers * 100, 2)}% от общего числа курьеров\n'
-            f'Курьеров без возможности принимать заказы - {data[2]}, {round(data[2] / self.count_of_couriers * 100, 2)}% от общего числа курьеров')
+               f'Свободных курьеров - {data[0]}, {round(data[0] / self.count_of_couriers * 100, 2)}% от общего числа курьеров\n'
+               f'Занятых заказом курьеров - {data[1]}, {round(data[1] / self.count_of_couriers * 100, 2)}% от общего числа курьеров\n'
+               f'Курьеров без возможности принимать заказы - {data[2]}, {round(data[2] / self.count_of_couriers * 100, 2)}% от общего числа курьеров')
 
         self._ui.couriers_summary.setText(msg)
 
@@ -208,7 +225,7 @@ UNION ALL SELECT COUNT(*) FROM courier WHERE courier_rating < 4.10;
         :return:
         """
         query = (sql.SQL(
-            """SELECT u.user_surname || ' ' || u.user_name || ' ' || u.user_patronymic AS "Курьер", c.courier_rating, u.user_tg_username
+            """SELECT u.user_surname || ' ' || u.user_name || ' ' || COALESCE(u.user_patronymic, '') AS "Курьер", c.courier_rating, u.user_tg_username
 FROM courier c 
 JOIN users u ON c.user_id = u.user_id 
 WHERE c.courier_rating < 4.10;"""
@@ -226,7 +243,11 @@ WHERE c.courier_rating < 4.10;"""
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
 
+
         if not data:
+            self._ui.problematic_couriers_summary.clear()
+            self._ui.problematic_couriers_summary.setRowCount(0)
+            self._ui.problematic_couriers_summary.setColumnCount(0)
             return
 
         self._ui.problematic_couriers_summary.setRowCount(len(data))
@@ -301,13 +322,13 @@ ORDER BY r.rating DESC;
                 data = cur.execute(query).fetchall()
             labels = ['5 звезд', '4 звезды', '3 звезды', '2 звезды', '1 звезда']
             values = [item[1] for item in data]
-            ic(values)
             # return
             if sum(values) == 0:
                 plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
                 plt.axis('off')  # Скрыть оси
             else:
                 plt.pie(values, autopct='%1.1f%%')
+            plt.title("Рейтинг доставок")
             plt.legend(title="Оценки", labels=labels, loc="upper center", bbox_to_anchor=(0.5, -0.05), ncol=3)
             plt.tight_layout()
             plt.savefig("orders_rating.png")
