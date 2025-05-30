@@ -1,16 +1,17 @@
 import logging
 
 import psycopg as ps
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QDate
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout, \
-    QAbstractItemView
+    QAbstractItemView, QComboBox, QDateEdit, QLabel, QHBoxLayout, QDialog, QPushButton, QSpacerItem, QGroupBox, \
+    QSizePolicy
 from icecream import ic
 from psycopg import sql
 
 from core import Database
 from windows_design import DataWindow
 
-from core import *
+from core import LOCALIZED_TABLES_NAMES, LOCALIZED_COLUMNS_NAME, IDENTIFIERS, FOREIGN_KEYS, NON_EDITABLE_COLUMNS, REDACT_IN_MODAL_WINDOW_MODE
 
 
 def construct_query_by_table(table_name: str) -> sql.SQL:
@@ -101,6 +102,7 @@ class Data(QMainWindow):
         self.show_all_column()
 
         query = construct_query_by_table(self.current_table)
+
         try:
             with self.connect.cursor() as cur:
                 data = cur.execute(query).fetchall()
@@ -108,6 +110,7 @@ class Data(QMainWindow):
                          row in data]
 
             self.clear_table()
+
             if not self.data:
                 self._ui.data_table.setRowCount(1)
                 self._ui.data_table.setColumnCount(len(LOCALIZED_COLUMNS_NAME.get(self.current_table).values()))
@@ -135,7 +138,7 @@ class Data(QMainWindow):
                     if isinstance(item, bool):
                         checkbox = QCheckBox()
                         checkbox.setChecked(item)
-                        self._ui.data_table.setCellWidget(r_idx, c_idx, QCheckBox())
+                        self._ui.data_table.setCellWidget(r_idx, c_idx, checkbox)
                         continue
 
                     self._ui.data_table.setItem(r_idx, c_idx, _item)
@@ -150,7 +153,9 @@ class Data(QMainWindow):
 
     def fill_search_field(self):
         columns = LOCALIZED_COLUMNS_NAME.get(self.current_table).values()
+
         self._ui.search_field.clear()
+
         for column in columns:
             self._ui.search_field.addItem(column)
 
@@ -171,24 +176,29 @@ class Data(QMainWindow):
         layout.setVerticalSpacing(0)
 
         columns = LOCALIZED_COLUMNS_NAME.get(self.current_table).values()
-        ic(columns)
+
         cols_per_row = 2
 
         for idx, column in enumerate(columns):
             row = idx // cols_per_row
             col = idx % cols_per_row
+
             checkbox = QCheckBox(column)
             checkbox.checkStateChanged.connect(lambda state, col=column: self.hide_column(col, state))
+
             layout.addWidget(checkbox, row, col)
 
         group_box.setLayout(layout)
 
     def hide_column(self, col, state):
         table = self._ui.data_table
+
         for c_idx in range(table.columnCount()):
             header_text = self._ui.data_table.horizontalHeader().model().headerData(c_idx, Qt.Horizontal)
+
             if header_text != col:
                 continue
+
             if state == Qt.Checked:
                 self._ui.data_table.setColumnHidden(c_idx, True)
             else:
@@ -205,6 +215,7 @@ class Data(QMainWindow):
 
         table = self._ui.data_table
         c_idx = self.current_column[0]
+
         for row in range(table.rowCount()):
             if text.lower() not in table.item(row, c_idx).text().lower():
                 table.setRowHidden(row, True)
@@ -234,10 +245,12 @@ class Data(QMainWindow):
         try:
             table = self._ui.data_table
             header = self._ui.data_table.horizontalHeader().model()
+
             for c in range(table.columnCount()):
                 item = table.item(x, c)
                 header_text = header.headerData(c, Qt.Horizontal)
                 header_text = get_key_by_value(LOCALIZED_COLUMNS_NAME.get(self.current_table), header_text)
+
                 if header_text in IDENTIFIERS.values():
                     self.delete_record(item.text(), header_text, x)
                     return
@@ -336,7 +349,8 @@ class Data(QMainWindow):
         if header_data in REDACT_IN_MODAL_WINDOW_MODE.get(self.current_table):
             self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
 
-            # логика модального окна
+            self.old_cell_value = self._ui.data_table.item(row, column).text()
+            self.show_modal_window(header_data, row, column)
 
             self._ui.data_table.cellChanged.connect(self.cell_value_changed)
         else:
@@ -344,3 +358,93 @@ class Data(QMainWindow):
             if item:
                 self.old_cell_value = item.text()
                 self._ui.data_table.editItem(item)
+
+    def show_modal_window(self, header_data, row, column):
+        window = Dialog()
+        if window.exec() == 1:
+            status = window.save_status()
+            self.update_data(row, column, status)
+
+    def update_data(self, row, column, status):
+        try:
+            table = self._ui.data_table
+            identifier = IDENTIFIERS.get(self.current_table)
+            identifier_value = table.item(row, 0).text()
+
+            if status[0] == self.old_cell_value:
+                return
+
+            with self.connect.cursor() as cur:
+                catch = sql.SQL("SELECT 1 FROM \"order\" WHERE order_id = %s FOR UPDATE NOWAIT;")
+                cur.execute(catch, (identifier_value,))
+                update = sql.SQL("UPDATE \"order\" SET order_status = %s WHERE order_id = %s;")
+                cur.execute(update, (status[1], identifier_value,))
+            self.connect.commit()
+
+            table.item(row, column).setText(status[0])
+            table.resizeColumnsToContents()
+
+        except ps.Error as p:
+            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            self.connect.rollback()
+
+
+class Dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Изменение статуса заказа")
+
+        self.status = None
+        self.ok_btn = QPushButton("ОК")
+        self.cancel_btn = QPushButton("Отмена")
+
+        self.ok_btn.clicked.connect(self.accept)
+        self.cancel_btn.clicked.connect(self.reject)
+
+        self.combo = QComboBox()
+        self.combo.currentTextChanged.connect(self.status_changed)
+
+        self.setup_layout()
+
+    def setup_layout(self):
+        layout = QVBoxLayout()
+
+        cmb_groupbox = QGroupBox()
+
+        v_layout = QVBoxLayout()
+        label = QLabel("Выберите новый статус для заказа")
+
+        self.combo.addItem("Доставлен клиенту", userData=2)
+        self.combo.addItem("Принят курьером", userData=1)
+
+        self.combo.currentTextChanged.connect(self.status_changed)
+
+        v_layout.addWidget(label)
+        v_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        v_layout.addWidget(self.combo)
+
+        cmb_groupbox.setLayout(v_layout)
+
+        btn_groupbox = QGroupBox()
+
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(self.ok_btn)
+
+        # горизонтальный спейсер
+        h_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+
+        h_layout.addWidget(self.cancel_btn)
+
+        btn_groupbox.setLayout(h_layout)
+
+        layout.addWidget(cmb_groupbox)
+        layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        layout.addWidget(btn_groupbox)
+
+        self.setLayout(layout)
+
+    def status_changed(self):
+        self.status = (self.combo.currentText(), self.combo.currentData())
+
+    def save_status(self):
+        return self.status
