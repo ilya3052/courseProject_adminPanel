@@ -176,6 +176,8 @@ class Data(QMainWindow):
                     if isinstance(item, bool):
                         checkbox = QCheckBox()
                         checkbox.setChecked(item)
+                        checkbox.stateChanged.connect(
+                            lambda state, row=r_idx, column=c_idx: self.checkbox_value_changed(state, row, column))
                         self._ui.data_table.setCellWidget(r_idx, c_idx, checkbox)
                         continue
 
@@ -385,6 +387,8 @@ class Data(QMainWindow):
                 table.resizeColumnsToContents()
 
                 self._ui.data_table.cellChanged.connect(self.cell_value_changed)
+            if header_data == 'courier_rating':
+                asyncio.create_task(Database.notify_channel("rating_changed", ''))
         except ps.Error as p:
             logging.exception(f"При выполнении запроса произошла ошибка\n"
                               f"Класс ошибки: {type(p).__name__}\n"
@@ -412,6 +416,35 @@ class Data(QMainWindow):
             if item:
                 self.old_cell_value = item.text()
                 self._ui.data_table.editItem(item)
+
+    def checkbox_value_changed(self, state, row, column):
+        new_value = state == Qt.Checked
+
+        header_data = self._ui.data_table.horizontalHeader().model().headerData(column, Qt.Horizontal)
+        header_data = get_key_by_value(LOCALIZED_COLUMNS_NAME.get(self.current_table), header_data)
+        identifier = IDENTIFIERS.get(self.current_table)
+        identifier_value = self._ui.data_table.item(row, 0).text()
+
+        try:
+            with self.connect.cursor() as cur:
+                query = sql.SQL(
+                    "UPDATE {table} SET {column} = %s WHERE {identifier} = %s"
+                ).format(
+                    table=sql.Identifier(self.current_table),
+                    column=sql.Identifier(header_data),
+                    identifier=sql.Identifier(identifier)
+                )
+                cur.execute(query, (new_value, identifier_value))
+                self.connect.commit()
+        except ps.Error as p:
+            logging.exception(f"Ошибка при обновлении checkbox значения в БД\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+            self.connect.rollback()
 
     def show_modal_window(self, header_data, row, column):
         window = Dialog()
