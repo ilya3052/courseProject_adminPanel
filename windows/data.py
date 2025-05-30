@@ -1,6 +1,10 @@
 import logging
+from random import randint
+from threading import Timer
 
+import asyncio
 import psycopg as ps
+import pyperclip
 from PySide6.QtCore import Qt, QTimer, QDate
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout, \
     QAbstractItemView, QComboBox, QDateEdit, QLabel, QHBoxLayout, QDialog, QPushButton, QSpacerItem, QGroupBox, \
@@ -9,9 +13,9 @@ from icecream import ic
 from psycopg import sql
 
 from core import Database
+from core import LOCALIZED_TABLES_NAMES, LOCALIZED_COLUMNS_NAME, IDENTIFIERS, FOREIGN_KEYS, NON_EDITABLE_COLUMNS, \
+    REDACT_IN_MODAL_WINDOW_MODE
 from windows_design import DataWindow
-
-from core import LOCALIZED_TABLES_NAMES, LOCALIZED_COLUMNS_NAME, IDENTIFIERS, FOREIGN_KEYS, NON_EDITABLE_COLUMNS, REDACT_IN_MODAL_WINDOW_MODE
 
 
 def construct_query_by_table(table_name: str) -> sql.SQL:
@@ -58,9 +62,28 @@ def get_key_by_value(data: dict, value: str):
             return item[0]
 
 
+def get_chats_id() -> list[str] | ps.Error:
+    connect: ps.connect = Database.get_connection()
+    try:
+        with connect.cursor() as cur:
+            data = cur.execute("SELECT user_tgchat_id FROM users").fetchall()
+            data = [item[0] for item in data]
+        return data
+    except ps.Error as p:
+        logging.exception(f"При выполнении запроса произошла ошибка\n"
+                          f"Класс ошибки: {type(p).__name__}\n"
+                          f"SQLSTATE: {p.sqlstate}\n"
+                          f"Описание: {p.diag.message_primary}\n"
+                          f"Подробности: {p.diag.message_detail}\n"
+                          f"Полный текст ошибки: {str(p)}\n"
+                          f"---------------------------------------")
+        return p
+
+
 class Data(QMainWindow):
     def __init__(self, manager):
         super().__init__()
+        self.registration_link = None
         self.manager = manager
         self._ui = DataWindow()
         self._ui.setupUi(self)
@@ -74,6 +97,8 @@ class Data(QMainWindow):
         self.search_timer = QTimer()
         self.search_timer.setInterval(500)
         self.search_timer.setSingleShot(True)
+
+        self.timer = None
 
         self.setup_actions()
         self.current_table_changed()
@@ -94,12 +119,25 @@ class Data(QMainWindow):
 
         self._ui.data_table.verticalHeader().sectionDoubleClicked.connect(lambda x: self.vertical_header_click(x))
 
+        self._ui.add_courier.clicked.connect(self.add_courier)
+        self._ui.add_product.clicked.connect(self.add_product)
+
     def current_table_changed(self):
         self.current_table = get_key_by_value(LOCALIZED_TABLES_NAMES, self._ui.tables.currentText())
         self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
         self.fill_search_field()
         self.fill_display_columns()
         self.show_all_column()
+
+        if self.current_table == 'courier':
+            self._ui.add_courier.show()
+            self._ui.add_product.hide()
+        elif self.current_table == 'product':
+            self._ui.add_courier.hide()
+            self._ui.add_product.show()
+        else:
+            self._ui.add_courier.hide()
+            self._ui.add_product.hide()
 
         query = construct_query_by_table(self.current_table)
 
@@ -147,7 +185,13 @@ class Data(QMainWindow):
             self._ui.data_table.cellChanged.connect(self.cell_value_changed)
 
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполеннии запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
         except IndexError:
             pass
 
@@ -283,7 +327,13 @@ class Data(QMainWindow):
             row = self._ui.data_table.rowAt(row_nmb)
             self._ui.data_table.removeRow(row)
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
             self.connect.rollback()
 
             msg = QMessageBox(self)
@@ -292,9 +342,7 @@ class Data(QMainWindow):
             msg.setText("Произошла ошибка при попытке удаления записи")
             msg.setStandardButtons(QMessageBox.Ok)
 
-            msg.setDetailedText("Дополнительная информация:\n"
-                                f"{str(p).split('DETAIL:')[1].strip()}\n"
-                                f"Необходимо удалить связанные записи перед удалением!")
+            msg.setDetailedText("Дополнительную информацию об ошибке смотрите в логах")
             msg.exec()
 
     def cell_value_changed(self, row, column):
@@ -338,7 +386,13 @@ class Data(QMainWindow):
 
                 self._ui.data_table.cellChanged.connect(self.cell_value_changed)
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
             table.item(row, column).setText(self.old_cell_value)
             self.connect.rollback()
 
@@ -385,8 +439,89 @@ class Data(QMainWindow):
             table.resizeColumnsToContents()
 
         except ps.Error as p:
-            logging.exception(f"Произошла ошибка при выполнении запроса: {p}")
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
             self.connect.rollback()
+
+    def add_courier(self):
+        chats_id = get_chats_id()
+
+        if not isinstance(chats_id, list):
+            e = chats_id
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Critical)
+            msg.setWindowTitle("Ошибка")
+            msg.setText("Произошла ошибка при попытке получения данных")
+            msg.setStandardButtons(QMessageBox.Ok)
+
+            msg.setDetailedText("Подробную информацию смотрите в логах")
+            msg.exec()
+
+        stub_of_chat_id = randint(-2 ** 63, 2 ** 63 - 1)
+
+        while stub_of_chat_id in chats_id:
+            stub_of_chat_id = randint(-2 ** 63, 2 ** 63 - 1)
+
+        self.create_courier(stub_of_chat_id)
+
+        pyperclip.copy(self.registration_link)
+
+        QMessageBox.information(self, "Уведомление", "Ссылка для приглашения курьера скопирована в буфер обмена.\n"
+                                                     "Отправьте ее курьеру, он должен пройти регистрацию в течение 15 минут!",
+                                buttons=QMessageBox.StandardButton.Ok)
+
+    def create_courier(self, chat_id_stub):
+        try:
+            with self.connect.cursor() as cur:
+                query = (sql.SQL(
+                    """INSERT INTO users (user_tgchat_id, user_role, user_name, user_surname, user_phonenumber, user_tg_username) 
+                values (%s, 'courier', 'stub', 'stub', 11111111111, 'stub') RETURNING user_id;"""
+                ))
+                user_id = cur.execute(query, (chat_id_stub,)).fetchone()[0]
+                self.connect.commit()
+            self.registration_link = f"https://t.me/Courier_CourierExpressBot?start={chat_id_stub}"
+            self.timer = Timer(900, self.delete_user, [user_id])
+            self.timer.start()
+
+        except ps.Error as p:
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+            self.connect.rollback()
+
+    def delete_user(self, user_id):
+        try:
+            with self.connect.cursor() as cur:
+                query = (sql.SQL(
+                    """DELETE FROM users WHERE user_id = %s """
+                ))
+                cur.execute(query, (user_id,))
+                self.connect.commit()
+        except ps.Error as p:
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+            self.connect.rollback()
+
+    def stop_timer(self, conn, pid, channel, payload):
+        self.current_table_changed()
+        self.timer.cancel()
+
+    def add_product(self):
+        pass
 
 
 class Dialog(QDialog):
