@@ -18,9 +18,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
     QHBoxLayout, QHeaderView, QLabel, QLineEdit,
-    QMainWindow, QMenu, QMenuBar, QSizePolicy,
-    QSpacerItem, QStatusBar, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_data(object):
     def setupUi(self, data):
@@ -35,6 +35,8 @@ class Ui_data(object):
         self.action_3.setObjectName(u"action_3")
         self.action_5 = QAction(data)
         self.action_5.setObjectName(u"action_5")
+        self.action = QAction(data)
+        self.action.setObjectName(u"action")
         self.centralwidget = QWidget(data)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -156,10 +158,33 @@ class Ui_data(object):
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.gridLayout_2 = QGridLayout(self.groupBox_2)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.groupBox_8 = QGroupBox(self.groupBox_2)
+        self.groupBox_8.setObjectName(u"groupBox_8")
+        self.groupBox_8.setStyleSheet(u"QGroupBox { border: none;}")
+        self.verticalLayout_5 = QVBoxLayout(self.groupBox_8)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.add_courier = QPushButton(self.groupBox_8)
+        self.add_courier.setObjectName(u"add_courier")
+        self.add_courier.setEnabled(True)
+
+        self.verticalLayout_5.addWidget(self.add_courier)
+
+        self.add_product = QPushButton(self.groupBox_8)
+        self.add_product.setObjectName(u"add_product")
+
+        self.verticalLayout_5.addWidget(self.add_product)
+
+
+        self.gridLayout_2.addWidget(self.groupBox_8, 1, 0, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 1, 1, 1, 1)
+
         self.data_table = QTableWidget(self.groupBox_2)
         self.data_table.setObjectName(u"data_table")
 
-        self.gridLayout_2.addWidget(self.data_table, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.data_table, 0, 0, 1, 2)
 
 
         self.verticalLayout.addWidget(self.groupBox_2)
@@ -210,6 +235,7 @@ class Ui_data(object):
 #if QT_CONFIG(shortcut)
         self.action_5.setShortcut(QCoreApplication.translate("data", u"Ctrl+X", None))
 #endif // QT_CONFIG(shortcut)
+        self.action.setText(QCoreApplication.translate("data", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u044c", None))
         self.groupBox.setTitle("")
         self.groupBox_3.setTitle("")
         self.label_2.setText(QCoreApplication.translate("data", u"\u0422\u0430\u0431\u043b\u0438\u0446\u0430 \u0434\u043b\u044f \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u044f", None))
@@ -229,6 +255,9 @@ class Ui_data(object):
         self.groupBox_5.setTitle("")
         self.label.setText(QCoreApplication.translate("data", u"\u041f\u043e\u043b\u0435 \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", None))
         self.groupBox_2.setTitle("")
+        self.groupBox_8.setTitle("")
+        self.add_courier.setText(QCoreApplication.translate("data", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043a\u0443\u0440\u044c\u0435\u0440\u0430", None))
+        self.add_product.setText(QCoreApplication.translate("data", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0442\u043e\u0432\u0430\u0440", None))
         self.menu.setTitle(QCoreApplication.translate("data", u"\u041c\u0435\u043d\u044e", None))
         self.menu_2.setTitle(QCoreApplication.translate("data", u"\u041f\u043e\u043c\u043e\u0449\u044c", None))
     # retranslateUi
