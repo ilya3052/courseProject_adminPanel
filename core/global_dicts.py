@@ -61,20 +61,29 @@ IDENTIFIERS = {
     "order": "order_id",
 }
 
-NON_EDITABLE_COLUMNS = {
-    "users": ["user_tgchat_id", "role"],
+FOREIGN_KEYS = {
+    "users": [],
     "client": ["user_id"],
     "courier": ["user_id"],
-    "delivery": ["courier_id", "order_id"],
+    "delivery": ["courier_id"],
     "product": [],
     "order": ["client_id"],
 }
 
+NON_EDITABLE_COLUMNS = {
+    "users": ["user_tgchat_id", "user_role"],
+    "client": ["user_id", "fullname", "client_registerdate"],
+    "courier": ["user_id", "fullname"],
+    "delivery": ["courier_id", "order_id", "courier"],
+    "product": [],
+    "order": ["client_id", "client"],
+}
+
 REDACT_IN_MODAL_WINDOW_MODE = {
     "users": [],
-    "client": ["fullname"],
-    "courier": ["fullname"],
-    "delivery": ["courier"],
+    "client": [],
+    "courier": [],
+    "delivery": [],
     "product": [],
-    "order": ["client"],
+    "order": ["order_status"],
 }
