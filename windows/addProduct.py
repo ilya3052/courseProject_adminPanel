@@ -1,7 +1,10 @@
+import os
 import random
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QDialog
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QDialog, QFileDialog, QGraphicsScene, QMessageBox
+from certifi.core import exit_cacert_ctx
 from icecream import ic
 from psycopg import sql
 import psycopg as ps
@@ -28,6 +31,7 @@ class AddProduct(QDialog):
         self.price = None
         self.description = None
         self.image_path = None
+        self.new_image_name = None
 
         self.search_timer = QTimer()
         self.search_timer.setInterval(500)
@@ -51,7 +55,7 @@ class AddProduct(QDialog):
 
         self._ui.load_img.clicked.connect(self.load_img)
 
-        self._ui.save.clicked.connect(self.accept)
+        self._ui.save.clicked.connect(self.save_data)
         self._ui.cancel.clicked.connect(self.reject)
 
 
@@ -118,7 +122,14 @@ class AddProduct(QDialog):
         self.description = self._ui.description_input.toPlainText()
 
     def load_img(self):
-        pass
+        image_path, _ = QFileDialog.getOpenFileName(self, 'Выберите изображение товара', '', 'Изображения (*.png *.bmp *.jpg)')
+        if not image_path:
+            return
+
+        self.image_path = image_path
+        suffix = self.image_path.split('.')[-1]
+        self.new_image_name = f"{self.article}.{suffix}"
+        self.set_image_to_view()
 
     def existing_category(self):
         self._ui.category_combobox.show()
@@ -128,3 +139,39 @@ class AddProduct(QDialog):
     def new_category(self):
         self._ui.category_combobox.hide()
         self._ui.category_input.show()
+
+    def set_image_to_view(self):
+        scene = QGraphicsScene()
+        scene.addPixmap(QPixmap(self.image_path))
+        self._ui.product_img.setScene(scene)
+
+    def save_data(self):
+        try:
+            with self.connect.cursor() as cur:
+                query = (sql.SQL(
+                    """INSERT INTO product (product_article, product_name, product_category, product_price, product_description)
+VALUES (%s, %s, %s, %s, %s);"""
+                ))
+                cur.execute(query, (self.article, self.name, self.category, self.price, self.description,))
+                self.connect.commit()
+            os.rename(self.image_path, f"../courseProject_clientBot/product_images/{self.new_image_name}")
+            self.accept()
+        except ps.Error as p:
+            msg = QMessageBox()
+            msg.setWindowTitle("Ошибка")
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText(f"При выполнении запроса произошла ошибка")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDetailedText(p.diag.message_primary)
+            msg.exec()
+
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+            self.connect.rollback()
+
+
