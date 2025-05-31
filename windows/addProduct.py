@@ -39,8 +39,8 @@ class AddProduct(QDialog):
     def setup_actions(self):
         self._ui.name_input.textChanged.connect(self.name_changed)
 
-
         self._ui.category_combobox.currentTextChanged.connect(self.category_changed)
+        self._ui.category_input.textChanged.connect(self.new_category_input)
 
         self._ui.existsing_category.clicked.connect(self.existing_category)
         self._ui.new_category.clicked.connect(self.new_category)
@@ -54,8 +54,6 @@ class AddProduct(QDialog):
         self._ui.save.clicked.connect(self.accept)
         self._ui.cancel.clicked.connect(self.reject)
 
-        self.search_timer.timeout.connect(self.new_category_input)
-        self._ui.category_input.textChanged.connect(self.search_timer.start)
 
     def fill_preset_field(self):
         self.set_article()
@@ -70,7 +68,6 @@ class AddProduct(QDialog):
             with self.connect.cursor() as cur:
                 query = sql.SQL("SELECT product_article FROM product;")
                 articles = cur.execute(query).fetchall()
-                ic(articles)
             articles = [item[0] for item in articles]
             article: int = random.randint(0, 99999999)
             while article in articles:
@@ -106,7 +103,7 @@ class AddProduct(QDialog):
                               f"---------------------------------------")
 
     def name_changed(self):
-        pass
+        self.name = self._ui.name_input.text()
 
     def category_changed(self):
         self.category = self._ui.category_combobox.currentText()
