@@ -112,7 +112,7 @@ class AddProduct(QDialog):
         self.category = self._ui.category_input.text()
 
     def price_changed(self):
-        pass
+        self.price = round(self._ui.price_input.value(), 2)
 
     def description_changed(self):
         pass
