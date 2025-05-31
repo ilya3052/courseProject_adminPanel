@@ -1,4 +1,10 @@
+import random
+
 from PySide6.QtWidgets import QDialog
+from icecream import ic
+from psycopg import sql
+import psycopg as ps
+import logging
 
 from core import Database
 from windows_design import AddDataWindow
@@ -45,13 +51,30 @@ class AddProduct(QDialog):
 
 
     def fill_preset_field(self):
-        pass
+        self.set_article()
 
     def set_article(self):
-        pass
+        self.article = self.get_article()
+        self._ui.article_input.setText(str(self.article))
 
     def get_article(self) -> int:
-        pass
+        try:
+            with self.connect.cursor() as cur:
+                query = sql.SQL("SELECT product_article FROM product;")
+                articles = cur.execute(query).fetchall()
+                ic(articles)
+            article: int = random.randint(0, 99999999)
+            while article in articles:
+                article = random.randint(0, 99999999)
+            return article
+        except ps.Error as p:
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
 
     def name_changed(self):
         pass
