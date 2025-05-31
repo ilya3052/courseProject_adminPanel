@@ -15,6 +15,7 @@ from psycopg import sql
 from core import Database
 from core import LOCALIZED_TABLES_NAMES, LOCALIZED_COLUMNS_NAME, IDENTIFIERS, FOREIGN_KEYS, NON_EDITABLE_COLUMNS, \
     REDACT_IN_MODAL_WINDOW_MODE
+from windows.addProduct import AddProduct
 from windows_design import DataWindow
 
 
@@ -554,7 +555,8 @@ class Data(QMainWindow):
         self.timer.cancel()
 
     def add_product(self):
-        pass
+        window = AddProduct()
+        window.exec()
 
 
 class Dialog(QDialog):
