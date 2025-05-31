@@ -95,7 +95,9 @@ class AddProduct(QDialog):
         pass
 
     def existing_category(self):
-        pass
+        self._ui.category_combobox.show()
+        self._ui.category_input.hide()
 
     def new_category(self):
-        pass
+        self._ui.category_combobox.hide()
+        self._ui.category_input.show()
