@@ -115,7 +115,7 @@ class AddProduct(QDialog):
         self.price = round(self._ui.price_input.value(), 2)
 
     def description_changed(self):
-        pass
+        self.description = self._ui.description_input.toPlainText()
 
     def load_img(self):
         pass
