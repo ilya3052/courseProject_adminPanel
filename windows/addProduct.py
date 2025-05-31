@@ -13,6 +13,13 @@ class AddProduct(QDialog):
 
         self.connect = Database.get_connection()
 
+        self.article = None
+        self.name = None
+        self.category = None
+        self.price = None
+        self.description = None
+        self.image_path = None
+
         self.setup_actions()
         self.fill_preset_field()
 
@@ -27,3 +34,5 @@ class AddProduct(QDialog):
 
     def get_article(self) -> int:
         pass
+
+
