@@ -1,9 +1,10 @@
 import logging
+import os
+import tempfile
 
 import psycopg as ps
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QDialog, QGraphicsScene, QFileDialog
-from icecream import ic
 from matplotlib import pyplot as plt
 from psycopg import sql
 from reportlab.lib import colors
@@ -12,12 +13,9 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
-import os
 
 from core import Database
 from windows_design import ReportsWindow, RepByCatWindow
-
-import tempfile
 
 reports_col = ['Курьер', 'Номер заказа', 'Получатель', 'Адрес доставки', 'Оценка доставки', 'Отзыв']
 
@@ -156,7 +154,6 @@ class Reports(QMainWindow):
             with self.connect.cursor() as cur:
                 self.data = cur.execute("SELECT * FROM identifying_problematic_couriers;").fetchall()
             self.data = [[item for item in data] for data in self.data]
-            ic(self.data)
         except ps.Error as p:
             logging.exception(f"При выполнении запроса произошла ошибка\n"
                               f"Класс ошибки: {type(p).__name__}\n"
@@ -218,7 +215,6 @@ class Reports(QMainWindow):
         window.exec()
 
 
-
 class RepByCat(QDialog):
     def __init__(self):
         super().__init__()
@@ -274,7 +270,7 @@ FROM product p
 WHERE p.product_category = %s 
 GROUP BY p.product_name"""
                 ))
-                data = cur.execute(query, (self.category, )).fetchall()
+                data = cur.execute(query, (self.category,)).fetchall()
 
                 product = [item[0] for item in data]
                 count = [item[1] for item in data]

@@ -3,10 +3,8 @@ import webbrowser
 from functools import partial
 
 import psycopg as ps
-from PySide6.QtCore import QEvent
-from PySide6.QtGui import QPixmap, QShowEvent
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton, QGraphicsScene
-from icecream import ic
 from matplotlib import pyplot as plt
 from psycopg import sql
 
@@ -31,7 +29,6 @@ class SummaryInfo(QMainWindow):
         self._ui.setupUi(self)
         self.setup_actions()
         self.show_info()
-
 
     def setup_actions(self):
         self._ui.reports.triggered.connect(self.manager.show_reports)
@@ -108,7 +105,6 @@ JOIN product p ON a.product_article = p.product_article;"""
         try:
             with self.connect.cursor() as cur:
                 count_of_deliveries = cur.execute(get_count_of_deliveries).fetchone()[0]
-                ic(count_of_deliveries)
                 total_amount_purchased_products = cur.execute(get_total_amount_purchased_products).fetchone()[0]
                 most_ordered_category = cur.execute(get_most_ordered_category).fetchall()
         except ps.Error as p:
@@ -124,7 +120,6 @@ JOIN product p ON a.product_article = p.product_article;"""
                f"Общее количество заказов в системе: {count_of_deliveries}\n"
                f"Общая сумма купленных товаров: {round(total_amount_purchased_products, 2)}\n"
                f"Наиболее часто заказываемая категория товаров: {', '.join([category[0] for category in most_ordered_category]) or "еще нет заказов"}\n")
-
 
         self._ui.orders_summary.setText(msg)
         self.generate_categories_diagram()
@@ -243,7 +238,6 @@ WHERE c.courier_rating < 4.10;"""
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
 
-
         if not data:
             self._ui.problematic_couriers_summary.clear()
             self._ui.problematic_couriers_summary.setRowCount(0)
@@ -280,7 +274,7 @@ GROUP BY product_category;"""))
             y_axis = [item[1] for item in data]
             if sum(y_axis) == 0:
                 plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
-                plt.axis('off')  # Скрыть оси
+                plt.axis('off')
             else:
                 plt.bar(x_axis, y_axis, label="Количество продаж")
                 plt.xlabel("Категории", fontsize=10)
@@ -322,10 +316,9 @@ ORDER BY r.rating DESC;
                 data = cur.execute(query).fetchall()
             labels = ['5 звезд', '4 звезды', '3 звезды', '2 звезды', '1 звезда']
             values = [item[1] for item in data]
-            # return
             if sum(values) == 0:
                 plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
-                plt.axis('off')  # Скрыть оси
+                plt.axis('off')
             else:
                 plt.pie(values, autopct='%1.1f%%')
             plt.title("Рейтинг доставок")

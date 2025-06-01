@@ -1,12 +1,12 @@
+import logging
 import os
 import random
 
+import psycopg as ps
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QFileDialog, QGraphicsScene, QMessageBox
 from psycopg import sql
-import psycopg as ps
-import logging
 
 from core import Database
 from windows_design import AddDataWindow
@@ -55,7 +55,6 @@ class AddProduct(QDialog):
 
         self._ui.save.clicked.connect(self.save_data)
         self._ui.cancel.clicked.connect(self.reject)
-
 
     def fill_preset_field(self):
         self.set_article()
@@ -120,7 +119,8 @@ class AddProduct(QDialog):
         self.description = self._ui.description_input.toPlainText()
 
     def load_img(self):
-        image_path, _ = QFileDialog.getOpenFileName(self, 'Выберите изображение товара', '', 'Изображения (*.png *.bmp *.jpg)')
+        image_path, _ = QFileDialog.getOpenFileName(self, 'Выберите изображение товара', '',
+                                                    'Изображения (*.png *.bmp *.jpg)')
         if not image_path:
             return
 
@@ -171,5 +171,3 @@ VALUES (%s, %s, %s, %s, %s);"""
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
             self.connect.rollback()
-
-

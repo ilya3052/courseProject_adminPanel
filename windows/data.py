@@ -9,7 +9,6 @@ from PySide6.QtCore import Qt, QTimer, QDate
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout, \
     QAbstractItemView, QComboBox, QDateEdit, QLabel, QHBoxLayout, QDialog, QPushButton, QSpacerItem, QGroupBox, \
     QSizePolicy
-from icecream import ic
 from psycopg import sql
 
 from core import Database
@@ -600,7 +599,6 @@ class Dialog(QDialog):
         h_layout = QHBoxLayout()
         h_layout.addWidget(self.ok_btn)
 
-        # горизонтальный спейсер
         h_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
         h_layout.addWidget(self.cancel_btn)

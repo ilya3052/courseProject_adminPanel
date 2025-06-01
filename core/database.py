@@ -40,7 +40,6 @@ class Database:
             return Database._async_connect
 
         async with Database._lock:
-            # Проверяем еще раз внутри блокировки
             if Database._async_connect is None:
                 try:
                     Database._async_connect = await asyncpg.connect(
