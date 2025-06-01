@@ -96,7 +96,7 @@ class Reports(QMainWindow):
         try:
             with self.connect.cursor() as cur:
                 self.data = cur.execute("""SELECT c.courier_id, 
-                u.user_surname || ' ' || u.user_name || ' ' || u.user_patronymic AS "Курьер" 
+                u.user_surname || ' ' || u.user_name || ' ' || COALESCE(u.user_patronymic, '') AS "Курьер" 
                 FROM courier c 
                 JOIN users u ON c.user_id = u.user_id;""").fetchall()
         except ps.Error as p:

@@ -46,11 +46,6 @@ class SummaryInfo(QMainWindow):
         self.get_couriers_summary_info()
 
     def get_orders_summary_info(self):
-        """
-        label -> orders_summary
-        Количество заказов, общая сумма купленных товаров, самая популярная категория
-        :return:
-        """
         total_amount_purchased_products = 0
         most_ordered_category = ''
 
@@ -131,12 +126,6 @@ JOIN product p ON a.product_article = p.product_article;"""
         self.get_problematic_couriers_summary_info()
 
     def get_deliveries_summary_info(self):
-        """
-        label -> delivery_summary
-        Количество заказов с оценкой 5 звезд (+процентное соотношение)
-        и тд
-        :return:
-        """
         query = (sql.SQL(
             """SELECT r.rating, COUNT(d.delivery_id) AS count
 FROM generate_series(1, 5) AS r(rating)
@@ -177,13 +166,6 @@ ORDER BY r.rating DESC;
         self.get_problematic_couriers_summary_info()
 
     def get_couriers_summary_info(self):
-        """
-        label -> couriers_summary
-        Общее количество курьеров, количество свободных курьеров, количество занятых курьеров (процентное соотношение)
-        Курьер с наивысшим рейтингом
-        Курьер с низшим рейтингом
-        :return:
-        """
         query = (sql.SQL(
             """SELECT COUNT(*) FROM courier WHERE courier_is_busy_with_order = false AND courier_rating >= 4.10
 UNION ALL SELECT COUNT(*) FROM courier WHERE courier_is_busy_with_order = true AND courier_rating >= 4.10
@@ -214,11 +196,6 @@ UNION ALL SELECT COUNT(*) FROM courier WHERE courier_rating < 4.10;
         self._ui.couriers_summary.setText(msg)
 
     def get_problematic_couriers_summary_info(self):
-        """
-        label -> problematic_couriers_summary
-        Количество "проблемных" курьеров и их оценки + кликабельная ссылка на пользователя в тг для быстрой связи
-        :return:
-        """
         query = (sql.SQL(
             """SELECT u.user_surname || ' ' || u.user_name || ' ' || COALESCE(u.user_patronymic, '') AS "Курьер", c.courier_rating, u.user_tg_username
 FROM courier c 
