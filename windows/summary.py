@@ -3,6 +3,7 @@ import webbrowser
 from functools import partial
 
 import psycopg as ps
+from PySide6.QtCore import Slot
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton, QGraphicsScene
 from matplotlib import pyplot as plt
@@ -120,8 +121,8 @@ JOIN product p ON a.product_article = p.product_article;"""
         self.generate_categories_diagram()
         self.generate_orders_diagram()
 
-    async def delivery_notify(self, conn, pid, channel, payload):
-        self.get_deliveries_summary_info()
+    @Slot()
+    def delivery_notify(self):
         self.get_couriers_summary_info()
         self.get_problematic_couriers_summary_info()
 

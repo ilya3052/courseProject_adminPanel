@@ -5,7 +5,7 @@ from threading import Timer
 import asyncio
 import psycopg as ps
 import pyperclip
-from PySide6.QtCore import Qt, QTimer, QDate
+from PySide6.QtCore import Qt, QTimer, QDate, Signal
 from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QCheckBox, QMessageBox, QVBoxLayout, QWidget, QGridLayout, \
     QAbstractItemView, QComboBox, QDateEdit, QLabel, QHBoxLayout, QDialog, QPushButton, QSpacerItem, QGroupBox, \
     QSizePolicy
@@ -81,6 +81,8 @@ def get_chats_id() -> list[str] | ps.Error:
 
 
 class Data(QMainWindow):
+    rating_changed = Signal()
+
     def __init__(self, manager):
         super().__init__()
         self.registration_link = None
@@ -387,7 +389,7 @@ class Data(QMainWindow):
 
                 self._ui.data_table.cellChanged.connect(self.cell_value_changed)
             if header_data == 'courier_rating':
-                asyncio.create_task(Database.notify_channel("rating_changed", ''))
+                self.rating_changed.emit()
         except ps.Error as p:
             logging.exception(f"При выполнении запроса произошла ошибка\n"
                               f"Класс ошибки: {type(p).__name__}\n"

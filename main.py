@@ -24,9 +24,6 @@ def start_listening():
         Database.listen_channel("order_status", window.summary_window.order_notify)
     )
     asyncio.create_task(
-        Database.listen_channel("rate_delivery", window.summary_window.delivery_notify)
-    )
-    asyncio.create_task(
         Database.listen_channel("rating_changed", window.summary_window.courier_notify)
     )
 
