@@ -326,8 +326,7 @@ class Data(QMainWindow):
                 cur.execute(query, (record_id,))
                 self.connect.commit()
 
-            row = self._ui.data_table.rowAt(row_nmb)
-            self._ui.data_table.removeRow(row)
+            self._ui.data_table.removeRow(row_nmb)
         except ps.Error as p:
             logging.exception(f"При выполнении запроса произошла ошибка\n"
                               f"Класс ошибки: {type(p).__name__}\n"
