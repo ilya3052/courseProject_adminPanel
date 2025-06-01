@@ -40,6 +40,10 @@ class Ui_reports(object):
         self.report_by_courier.setObjectName(u"report_by_courier")
         self.full_analytical_report = QAction(reports)
         self.full_analytical_report.setObjectName(u"full_analytical_report")
+        self.report_by_category = QAction(reports)
+        self.report_by_category.setObjectName(u"report_by_category")
+        self.average_cost_report = QAction(reports)
+        self.average_cost_report.setObjectName(u"average_cost_report")
         self.centralwidget = QWidget(reports)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -49,16 +53,16 @@ class Ui_reports(object):
         self.groupBox_2.setStyleSheet(u"QGroupBox {border: none;}")
         self.gridLayout_2 = QGridLayout(self.groupBox_2)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.label = QLabel(self.groupBox_2)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
-
         self.generate_report = QPushButton(self.groupBox_2)
         self.generate_report.setObjectName(u"generate_report")
         self.generate_report.setEnabled(True)
 
         self.gridLayout_2.addWidget(self.generate_report, 2, 0, 1, 1)
+
+        self.label = QLabel(self.groupBox_2)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
 
         self.courier_listbox = QComboBox(self.groupBox_2)
         self.courier_listbox.setObjectName(u"courier_listbox")
@@ -105,6 +109,7 @@ class Ui_reports(object):
         self.menu_2.addAction(self.problematic_couriers)
         self.menu_2.addAction(self.report_by_courier)
         self.menu_2.addAction(self.full_analytical_report)
+        self.menu_2.addAction(self.report_by_category)
 
         self.retranslateUi(reports)
 
@@ -141,9 +146,17 @@ class Ui_reports(object):
 #if QT_CONFIG(shortcut)
         self.full_analytical_report.setShortcut(QCoreApplication.translate("reports", u"Alt+3", None))
 #endif // QT_CONFIG(shortcut)
+        self.report_by_category.setText(QCoreApplication.translate("reports", u"\u041e\u0442\u0447\u0435\u0442 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438", None))
+#if QT_CONFIG(shortcut)
+        self.report_by_category.setShortcut(QCoreApplication.translate("reports", u"Alt+4", None))
+#endif // QT_CONFIG(shortcut)
+        self.average_cost_report.setText(QCoreApplication.translate("reports", u"\u041e\u0442\u0447\u0435\u0442 \u043f\u043e \u0441\u0440\u0435\u0434\u043d\u0435\u0439 \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u0438 \u0437\u0430\u043a\u0430\u0437\u0430", None))
+#if QT_CONFIG(shortcut)
+        self.average_cost_report.setShortcut(QCoreApplication.translate("reports", u"Alt+5", None))
+#endif // QT_CONFIG(shortcut)
         self.groupBox_2.setTitle("")
-        self.label.setText(QCoreApplication.translate("reports", u"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043a\u0443\u0440\u044c\u0435\u0440\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043e\u0442\u0447\u0435\u0442\u0430", None))
         self.generate_report.setText(QCoreApplication.translate("reports", u"\u0421\u0433\u0435\u043d\u0435\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043e\u0442\u0447\u0435\u0442", None))
+        self.label.setText(QCoreApplication.translate("reports", u"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043a\u0443\u0440\u044c\u0435\u0440\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043e\u0442\u0447\u0435\u0442\u0430", None))
         self.save_as_PDF.setText(QCoreApplication.translate("reports", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432 PDF", None))
         self.menu.setTitle(QCoreApplication.translate("reports", u"\u041c\u0435\u043d\u044e", None))
         self.menu_2.setTitle(QCoreApplication.translate("reports", u"\u041e\u0442\u0447\u0435\u0442\u044b", None))

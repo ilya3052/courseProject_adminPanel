@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QDialo
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
-            Dialog.setObjectName(u"Dialog")
+            Dialog.setObjectName(u"RepByCat")
         Dialog.resize(1101, 692)
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -286,32 +286,32 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("RepByCat", u"RepByCat", None))
         self.groupBox_3.setTitle("")
         self.groupBox.setTitle("")
         self.article.setTitle("")
-        self.label.setText(QCoreApplication.translate("Dialog", u"\u0410\u0440\u0442\u0438\u043a\u0443\u043b", None))
+        self.label.setText(QCoreApplication.translate("RepByCat", u"\u0410\u0440\u0442\u0438\u043a\u0443\u043b", None))
         self.name.setTitle("")
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
+        self.label_2.setText(QCoreApplication.translate("RepByCat", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
         self.category.setTitle("")
-        self.label_3.setText(QCoreApplication.translate("Dialog", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044e", None))
+        self.label_3.setText(QCoreApplication.translate("RepByCat", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044e", None))
         self.groupBox_7.setTitle("")
         self.groupBox_9.setTitle("")
         self.groupBox_8.setTitle("")
-        self.existsing_category.setText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0449\u0430\u044f", None))
-        self.new_category.setText(QCoreApplication.translate("Dialog", u"\u041d\u043e\u0432\u0430\u044f", None))
+        self.existsing_category.setText(QCoreApplication.translate("RepByCat", u"\u0421\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044e\u0449\u0430\u044f", None))
+        self.new_category.setText(QCoreApplication.translate("RepByCat", u"\u041d\u043e\u0432\u0430\u044f", None))
         self.price.setTitle("")
-        self.label_4.setText(QCoreApplication.translate("Dialog", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c \u20bd", None))
+        self.label_4.setText(QCoreApplication.translate("RepByCat", u"\u0423\u043a\u0430\u0436\u0438\u0442\u0435 \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c \u20bd", None))
         self.price_input.setSpecialValueText("")
         self.description.setTitle("")
-        self.label_5.setText(QCoreApplication.translate("Dialog", u"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 (\u0434\u043e 512 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432)", None))
+        self.label_5.setText(QCoreApplication.translate("RepByCat", u"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 (\u0434\u043e 512 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432)", None))
         self.image.setTitle("")
-        self.label_6.setText(QCoreApplication.translate("Dialog", u"\u0412\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0435 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435", None))
+        self.label_6.setText(QCoreApplication.translate("RepByCat", u"\u0412\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0435 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435", None))
         self.groupBox_2.setTitle("")
-        self.load_img.setText(QCoreApplication.translate("Dialog", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c", None))
+        self.load_img.setText(QCoreApplication.translate("RepByCat", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c", None))
         self.groupBox_4.setTitle("")
         self.groupBox_5.setTitle("")
-        self.save.setText(QCoreApplication.translate("Dialog", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
-        self.cancel.setText(QCoreApplication.translate("Dialog", u"\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c", None))
+        self.save.setText(QCoreApplication.translate("RepByCat", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
+        self.cancel.setText(QCoreApplication.translate("RepByCat", u"\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c", None))
     # retranslateUi
 
