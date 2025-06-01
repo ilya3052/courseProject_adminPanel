@@ -8,6 +8,8 @@ class WindowManager:
         self.summary_window = SummaryInfo(manager=self)
         self.data_window = Data(manager=self)
 
+        self.data_window.rating_changed.connect(self.summary_window.delivery_notify)
+
     def show_reports(self):
         self.summary_window.hide()
         self.data_window.hide()
