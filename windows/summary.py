@@ -283,7 +283,7 @@ GROUP BY product_category;"""))
                 plt.axis('off')  # Скрыть оси
             else:
                 plt.bar(x_axis, y_axis, label="Количество продаж")
-                plt.xlabel("Категории", fontsize=1)
+                plt.xlabel("Категории", fontsize=10)
                 plt.xticks(size=8)
                 plt.ylim(0, max(y_axis) + 2)
                 plt.ylabel("Количество продаж", fontsize=10)

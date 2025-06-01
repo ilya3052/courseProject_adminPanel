@@ -1,17 +1,23 @@
 import logging
 
 import psycopg as ps
-from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QDialog, QGraphicsScene, QFileDialog
 from icecream import ic
+from matplotlib import pyplot as plt
+from psycopg import sql
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+import os
 
 from core import Database
-from windows_design import ReportsWindow
+from windows_design import ReportsWindow, RepByCatWindow
+
+import tempfile
 
 reports_col = ['Курьер', 'Номер заказа', 'Получатель', 'Адрес доставки', 'Оценка доставки', 'Отзыв']
 
@@ -56,6 +62,7 @@ class Reports(QMainWindow):
         self._ui.save_as_PDF.clicked.connect(self.generate_pdf_report)
         self._ui.problematic_couriers.triggered.connect(self.show_problematic_courier_report)
         self._ui.data.triggered.connect(self.manager.show_data)
+        self._ui.report_by_category.triggered.connect(self.show_report_by_category)
 
     def change_cur_courier(self):
         self.current_courier_id = get_key_by_index(self.couriers, self._ui.courier_listbox.currentIndex())
@@ -206,4 +213,109 @@ class Reports(QMainWindow):
         QMessageBox.information(self, "Успех", "Данные сохранены в файл report.pdf",
                                 buttons=QMessageBox.StandardButton.Ok)
 
+    def show_report_by_category(self):
+        window = RepByCat()
+        window.exec()
 
+
+
+class RepByCat(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self._temp_image_path = None
+        self._ui = RepByCatWindow()
+        self._ui.setupUi(self)
+
+        self.connect = Database.get_connection()
+        self.category = None
+
+        self.set_category()
+        self.setup_actions()
+
+    def setup_actions(self):
+        self._ui.categories.currentTextChanged.connect(self.change_category)
+        self._ui.create_report.clicked.connect(self.create_report)
+        self._ui.save_report.clicked.connect(self.save_report_image)
+        self._ui.close.clicked.connect(self.reject)
+
+    def set_category(self):
+        categories = self.get_categories()
+        for item in categories:
+            self._ui.categories.addItem(item)
+
+    def get_categories(self):
+        try:
+            with self.connect.cursor() as cur:
+                data = cur.execute("SELECT DISTINCT product_category FROM product").fetchall()
+            data = [item[0] for item in data]
+            self.category = data[0]
+            return data
+        except ps.Error as p:
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+
+    def change_category(self):
+        self.category = self._ui.categories.currentText()
+
+    def create_report(self):
+        try:
+            with self.connect.cursor() as cur:
+                query = (sql.SQL(
+                    """SELECT p.product_name, COUNT(p.product_name) 
+FROM product p 
+	JOIN added a ON a.product_article = p.product_article
+	JOIN "order" o ON o.order_id = a.order_id
+WHERE p.product_category = %s 
+GROUP BY p.product_name"""
+                ))
+                data = cur.execute(query, (self.category, )).fetchall()
+
+                product = [item[0] for item in data]
+                count = [item[1] for item in data]
+
+                if not data:
+                    plt.text(0.5, 0.5, "Нет данных", ha='center', va='center')
+                    plt.axis('off')
+                else:
+                    plt.bar(product, count, label=f"Продажи в категории {self.category}")
+                    plt.xlabel('Товар', fontsize=8)
+                    plt.ylabel('Количество проданных', fontsize=10)
+                    plt.ylim(0, max(count) + 5)
+                    plt.legend()
+                    plt.title(f"Продажи в категории {self.category}")
+                    plt.xticks(rotation=45, ha='right')
+                    for i, v in enumerate(count):
+                        plt.text(i, v + 0.5, str(v), ha='center')
+                plt.subplots_adjust(bottom=0.4)
+                temp_file = os.path.join(tempfile.gettempdir(), "report.png")
+                plt.savefig(temp_file)
+                plt.close()
+                scene = QGraphicsScene()
+                scene.addPixmap(QPixmap(temp_file))
+                self._ui.report_img.setScene(scene)
+                self._temp_image_path = temp_file
+
+        except ps.Error as p:
+            logging.exception(f"При выполнении запроса произошла ошибка\n"
+                              f"Класс ошибки: {type(p).__name__}\n"
+                              f"SQLSTATE: {p.sqlstate}\n"
+                              f"Описание: {p.diag.message_primary}\n"
+                              f"Подробности: {p.diag.message_detail}\n"
+                              f"Полный текст ошибки: {str(p)}\n"
+                              f"---------------------------------------")
+
+    def save_report_image(self):
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Сохранить изображение", f"{self.category}.png", "PNG файлы (*.png);;Все файлы (*)"
+        )
+        if file_path and hasattr(self, "_temp_image_path"):
+            QPixmap(self._temp_image_path).save(file_path)
+            os.remove(self._temp_image_path)
+            self._temp_image_path = None
+            self.accept()
