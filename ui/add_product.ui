@@ -1,408 +1,402 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>RepByCat</class>
-    <widget class="QDialog" name="RepByCat">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>1101</width>
-                <height>692</height>
-            </rect>
-        </property>
-        <property name="windowTitle">
-            <string>RepByCat</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-                <widget class="QGroupBox" name="groupBox_3">
-                    <property name="styleSheet">
-                        <string notr="true">QGroupBox {border: none;}</string>
-                    </property>
-                    <property name="title">
-                        <string/>
-                    </property>
-                    <layout class="QHBoxLayout" name="horizontalLayout_8">
-                        <item>
-                            <widget class="QGroupBox" name="groupBox">
-                                <property name="styleSheet">
-                                    <string notr="true">QGroupBox {border: 1px solid ;
+ <class>RepByCat</class>
+ <widget class="QDialog" name="RepByCat">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1101</width>
+    <height>692</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Добавить товар</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {border: none;}</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">QGroupBox {border: 1px solid ;
                                         border-color: rgb(220, 220, 220);}
                                     </string>
-                                </property>
-                                <property name="title">
-                                    <string/>
-                                </property>
-                                <layout class="QVBoxLayout" name="verticalLayout_6">
-                                    <item>
-                                        <widget class="QGroupBox" name="article">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: 1px solid ;
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QGroupBox" name="article">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: 1px solid ;
                                                     border-color: rgb(220, 220, 220);}
                                                 </string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2,6">
-                                                <item>
-                                                    <widget class="QLabel" name="label">
-                                                        <property name="text">
-                                                            <string>Артикул</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <widget class="QLineEdit" name="article_input">
-                                                        <property name="enabled">
-                                                            <bool>true</bool>
-                                                        </property>
-                                                        <property name="readOnly">
-                                                            <bool>true</bool>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <spacer name="horizontalSpacer">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Orientation::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QGroupBox" name="name">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: 1px solid ;
-                                                    border-color: rgb(220, 220, 220);}
-                                                </string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2,6">
-                                                <item>
-                                                    <widget class="QLabel" name="label_2">
-                                                        <property name="text">
-                                                            <string>Укажите название</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <widget class="QLineEdit" name="name_input"/>
-                                                </item>
-                                                <item>
-                                                    <spacer name="horizontalSpacer_2">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Orientation::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QGroupBox" name="category">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: 1px solid ;
-                                                    border-color: rgb(220, 220, 220);}
-                                                </string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,5">
-                                                <item>
-                                                    <widget class="QLabel" name="label_3">
-                                                        <property name="text">
-                                                            <string>Укажите категорию</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <widget class="QGroupBox" name="groupBox_7">
-                                                        <property name="styleSheet">
-                                                            <string notr="true">QGroupBox {border: none;}</string>
-                                                        </property>
-                                                        <property name="title">
-                                                            <string/>
-                                                        </property>
-                                                        <layout class="QHBoxLayout" name="horizontalLayout_2"
-                                                                stretch="7,5">
-                                                            <item>
-                                                                <widget class="QGroupBox" name="groupBox_9">
-                                                                    <property name="title">
-                                                                        <string/>
-                                                                    </property>
-                                                                    <layout class="QVBoxLayout" name="verticalLayout_2">
-                                                                        <item>
-                                                                            <widget class="QComboBox"
-                                                                                    name="category_combobox"/>
-                                                                        </item>
-                                                                        <item>
-                                                                            <widget class="QLineEdit"
-                                                                                    name="category_input"/>
-                                                                        </item>
-                                                                    </layout>
-                                                                </widget>
-                                                            </item>
-                                                            <item>
-                                                                <widget class="QGroupBox" name="groupBox_8">
-                                                                    <property name="title">
-                                                                        <string/>
-                                                                    </property>
-                                                                    <layout class="QVBoxLayout" name="verticalLayout_3">
-                                                                        <item>
-                                                                            <widget class="QRadioButton"
-                                                                                    name="existsing_category">
-                                                                                <property name="text">
-                                                                                    <string>Существующая</string>
-                                                                                </property>
-                                                                                <property name="checked">
-                                                                                    <bool>true</bool>
-                                                                                </property>
-                                                                            </widget>
-                                                                        </item>
-                                                                        <item>
-                                                                            <widget class="QRadioButton"
-                                                                                    name="new_category">
-                                                                                <property name="text">
-                                                                                    <string>Новая</string>
-                                                                                </property>
-                                                                            </widget>
-                                                                        </item>
-                                                                    </layout>
-                                                                </widget>
-                                                            </item>
-                                                        </layout>
-                                                    </widget>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QGroupBox" name="price">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: 1px solid ;
-                                                    border-color: rgb(220, 220, 220);}
-                                                </string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,4,6">
-                                                <item>
-                                                    <widget class="QLabel" name="label_4">
-                                                        <property name="text">
-                                                            <string>Укажите стоимость ₽</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <widget class="QDoubleSpinBox" name="price_input">
-                                                        <property name="buttonSymbols">
-                                                            <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
-                                                        </property>
-                                                        <property name="specialValueText">
-                                                            <string/>
-                                                        </property>
-                                                        <property name="maximum">
-                                                            <double>50000.000000000000000</double>
-                                                        </property>
-                                                        <property name="stepType">
-                                                            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType
-                                                            </enum>
-                                                        </property>
-                                                        <property name="value">
-                                                            <double>1.000000000000000</double>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <spacer name="horizontalSpacer_3">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Orientation::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QGroupBox" name="description">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: 1px solid ;
-                                                    border-color: rgb(220, 220, 220);}
-                                                </string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QVBoxLayout" name="verticalLayout_4">
-                                                <item>
-                                                    <widget class="QLabel" name="label_5">
-                                                        <property name="text">
-                                                            <string>Введите описание (до 512 символов)</string>
-                                                        </property>
-                                                        <property name="alignment">
-                                                            <set>Qt::AlignmentFlag::AlignCenter</set>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <widget class="QTextEdit" name="description_input"/>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                </layout>
-                            </widget>
-                        </item>
-                        <item>
-                            <widget class="QGroupBox" name="image">
-                                <property name="styleSheet">
-                                    <string notr="true">QGroupBox {border: 1px solid ;
-                                        border-color: rgb(220, 220, 220);}
-                                    </string>
-                                </property>
-                                <property name="title">
-                                    <string/>
-                                </property>
-                                <layout class="QVBoxLayout" name="verticalLayout_5">
-                                    <item>
-                                        <widget class="QLabel" name="label_6">
-                                            <property name="text">
-                                                <string>Выбранное изображение</string>
-                                            </property>
-                                            <property name="alignment">
-                                                <set>Qt::AlignmentFlag::AlignCenter</set>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QGraphicsView" name="product_img"/>
-                                    </item>
-                                    <item>
-                                        <widget class="QGroupBox" name="groupBox_2">
-                                            <property name="styleSheet">
-                                                <string notr="true">QGroupBox {border: none;}</string>
-                                            </property>
-                                            <property name="title">
-                                                <string/>
-                                            </property>
-                                            <layout class="QHBoxLayout" name="horizontalLayout_7">
-                                                <item>
-                                                    <spacer name="horizontalSpacer_4">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Orientation::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                                <item>
-                                                    <widget class="QPushButton" name="load_img">
-                                                        <property name="text">
-                                                            <string>Загрузить</string>
-                                                        </property>
-                                                    </widget>
-                                                </item>
-                                                <item>
-                                                    <spacer name="horizontalSpacer_5">
-                                                        <property name="orientation">
-                                                            <enum>Qt::Orientation::Horizontal</enum>
-                                                        </property>
-                                                        <property name="sizeHint" stdset="0">
-                                                            <size>
-                                                                <width>40</width>
-                                                                <height>20</height>
-                                                            </size>
-                                                        </property>
-                                                    </spacer>
-                                                </item>
-                                            </layout>
-                                        </widget>
-                                    </item>
-                                </layout>
-                            </widget>
-                        </item>
-                    </layout>
-                </widget>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2,6">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Артикул</string>
+              </property>
+             </widget>
             </item>
             <item>
-                <widget class="QGroupBox" name="groupBox_4">
-                    <property name="styleSheet">
-                        <string notr="true">QGroupBox {border: none;}</string>
-                    </property>
-                    <property name="title">
-                        <string/>
-                    </property>
-                    <layout class="QHBoxLayout" name="horizontalLayout_6">
-                        <item>
-                            <spacer name="horizontalSpacer_6">
-                                <property name="orientation">
-                                    <enum>Qt::Orientation::Horizontal</enum>
-                                </property>
-                                <property name="sizeHint" stdset="0">
-                                    <size>
-                                        <width>40</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </item>
-                        <item>
-                            <widget class="QGroupBox" name="groupBox_5">
-                                <property name="title">
-                                    <string/>
-                                </property>
-                                <layout class="QHBoxLayout" name="horizontalLayout_9">
-                                    <item>
-                                        <widget class="QPushButton" name="save">
-                                            <property name="text">
-                                                <string>Сохранить</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                    <item>
-                                        <widget class="QPushButton" name="cancel">
-                                            <property name="text">
-                                                <string>Отменить</string>
-                                            </property>
-                                        </widget>
-                                    </item>
-                                </layout>
-                            </widget>
-                        </item>
-                    </layout>
-                </widget>
+             <widget class="QLineEdit" name="article_input">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="name">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: 1px solid ;
+                                                    border-color: rgb(220, 220, 220);}
+                                                </string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2,6">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Укажите название</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="name_input"/>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="category">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: 1px solid ;
+                                                    border-color: rgb(220, 220, 220);}
+                                                </string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,5">
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Укажите категорию</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_7">
+              <property name="styleSheet">
+               <string notr="true">QGroupBox {border: none;}</string>
+              </property>
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="7,5">
+               <item>
+                <widget class="QGroupBox" name="groupBox_9">
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <item>
+                   <widget class="QComboBox" name="category_combobox"/>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="category_input"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_8">
+                 <property name="title">
+                  <string/>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <item>
+                   <widget class="QRadioButton" name="existsing_category">
+                    <property name="text">
+                     <string>Существующая</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="new_category">
+                    <property name="text">
+                     <string>Новая</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="price">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: 1px solid ;
+                                                    border-color: rgb(220, 220, 220);}
+                                                </string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,4,6">
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Укажите стоимость ₽</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="price_input">
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+              </property>
+              <property name="specialValueText">
+               <string/>
+              </property>
+              <property name="maximum">
+               <double>50000.000000000000000</double>
+              </property>
+              <property name="stepType">
+               <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="description">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: 1px solid ;
+                                                    border-color: rgb(220, 220, 220);}
+                                                </string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Введите описание (до 512 символов)</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="description_input"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="image">
+        <property name="styleSheet">
+         <string notr="true">QGroupBox {border: 1px solid ;
+                                        border-color: rgb(220, 220, 220);}
+                                    </string>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Выбранное изображение</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGraphicsView" name="product_img"/>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {border: none;}</string>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="load_img">
+              <property name="text">
+               <string>Загрузить</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </widget>
-    <resources/>
-    <connections/>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {border: none;}</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <widget class="QPushButton" name="save">
+           <property name="text">
+            <string>Сохранить</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancel">
+           <property name="text">
+            <string>Отменить</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
 </ui>

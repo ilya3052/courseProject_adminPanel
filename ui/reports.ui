@@ -87,7 +87,6 @@
     </property>
     <addaction name="summary"/>
     <addaction name="data"/>
-    <addaction name="action_5"/>
     <addaction name="separator"/>
     <addaction name="action_4"/>
    </widget>

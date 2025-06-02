@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RepByCat</string>
+   <string>Отчет по категории</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="5,1">
    <item>

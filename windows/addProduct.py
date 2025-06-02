@@ -26,7 +26,7 @@ class AddProduct(QDialog):
         self.article = None
         self.name = None
         self.category = None
-        self.price = None
+        self.price = 1.0
         self.description = None
         self.image_path = None
         self.new_image_name = None
