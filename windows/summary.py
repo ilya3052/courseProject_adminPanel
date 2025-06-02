@@ -34,6 +34,7 @@ class SummaryInfo(QMainWindow):
     def setup_actions(self):
         self._ui.reports.triggered.connect(self.manager.show_reports)
         self._ui.data.triggered.connect(self.manager.show_data)
+        self._ui.exit.triggered.connect(self.close)
 
     def show_info(self):
         self.get_orders_summary_info()

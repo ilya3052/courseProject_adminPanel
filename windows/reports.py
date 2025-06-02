@@ -61,6 +61,7 @@ class Reports(QMainWindow):
         self._ui.problematic_couriers.triggered.connect(self.show_problematic_courier_report)
         self._ui.data.triggered.connect(self.manager.show_data)
         self._ui.report_by_category.triggered.connect(self.show_report_by_category)
+        self._ui.exit.triggered.connect(self.close)
 
     def change_cur_courier(self):
         self.current_courier_id = get_key_by_index(self.couriers, self._ui.courier_listbox.currentIndex())

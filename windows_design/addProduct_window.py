@@ -21,14 +21,14 @@ from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QComboBox, QDialo
     QSizePolicy, QSpacerItem, QTextEdit, QVBoxLayout,
     QWidget)
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        if not Dialog.objectName():
-            Dialog.setObjectName(u"RepByCat")
-        Dialog.resize(1101, 692)
-        self.verticalLayout = QVBoxLayout(Dialog)
+class Ui_RepByCat(object):
+    def setupUi(self, RepByCat):
+        if not RepByCat.objectName():
+            RepByCat.setObjectName(u"RepByCat")
+        RepByCat.resize(1101, 692)
+        self.verticalLayout = QVBoxLayout(RepByCat)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.groupBox_3 = QGroupBox(Dialog)
+        self.groupBox_3 = QGroupBox(RepByCat)
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.groupBox_3.setStyleSheet(u"QGroupBox {border: none;}")
         self.horizontalLayout_8 = QHBoxLayout(self.groupBox_3)
@@ -36,13 +36,15 @@ class Ui_Dialog(object):
         self.groupBox = QGroupBox(self.groupBox_3)
         self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                        border-color: rgb(220, 220, 220);}\n"
+"                                    ")
         self.verticalLayout_6 = QVBoxLayout(self.groupBox)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.article = QGroupBox(self.groupBox)
         self.article.setObjectName(u"article")
         self.article.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                                    border-color: rgb(220, 220, 220);}\n"
+"                                                ")
         self.horizontalLayout_3 = QHBoxLayout(self.article)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.label = QLabel(self.article)
@@ -70,7 +72,8 @@ class Ui_Dialog(object):
         self.name = QGroupBox(self.groupBox)
         self.name.setObjectName(u"name")
         self.name.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                                    border-color: rgb(220, 220, 220);}\n"
+"                                                ")
         self.horizontalLayout_4 = QHBoxLayout(self.name)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.label_2 = QLabel(self.name)
@@ -96,7 +99,8 @@ class Ui_Dialog(object):
         self.category = QGroupBox(self.groupBox)
         self.category.setObjectName(u"category")
         self.category.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                                    border-color: rgb(220, 220, 220);}\n"
+"                                                ")
         self.horizontalLayout = QHBoxLayout(self.category)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.label_3 = QLabel(self.category)
@@ -156,7 +160,8 @@ class Ui_Dialog(object):
         self.price = QGroupBox(self.groupBox)
         self.price.setObjectName(u"price")
         self.price.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                                    border-color: rgb(220, 220, 220);}\n"
+"                                                ")
         self.horizontalLayout_5 = QHBoxLayout(self.price)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.label_4 = QLabel(self.price)
@@ -168,7 +173,7 @@ class Ui_Dialog(object):
         self.price_input.setObjectName(u"price_input")
         self.price_input.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.UpDownArrows)
         self.price_input.setMaximum(50000.000000000000000)
-        self.price_input.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
+        self.price_input.setStepType(QAbstractSpinBox.StepType.DefaultStepType)
         self.price_input.setValue(1.000000000000000)
 
         self.horizontalLayout_5.addWidget(self.price_input)
@@ -186,7 +191,8 @@ class Ui_Dialog(object):
         self.description = QGroupBox(self.groupBox)
         self.description.setObjectName(u"description")
         self.description.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                                    border-color: rgb(220, 220, 220);}\n"
+"                                                ")
         self.verticalLayout_4 = QVBoxLayout(self.description)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.label_5 = QLabel(self.description)
@@ -209,7 +215,8 @@ class Ui_Dialog(object):
         self.image = QGroupBox(self.groupBox_3)
         self.image.setObjectName(u"image")
         self.image.setStyleSheet(u"QGroupBox {border: 1px solid ;\n"
-"border-color: rgb(220, 220, 220);}")
+"                                        border-color: rgb(220, 220, 220);}\n"
+"                                    ")
         self.verticalLayout_5 = QVBoxLayout(self.image)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.label_6 = QLabel(self.image)
@@ -250,7 +257,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.groupBox_3)
 
-        self.groupBox_4 = QGroupBox(Dialog)
+        self.groupBox_4 = QGroupBox(RepByCat)
         self.groupBox_4.setObjectName(u"groupBox_4")
         self.groupBox_4.setStyleSheet(u"QGroupBox {border: none;}")
         self.horizontalLayout_6 = QHBoxLayout(self.groupBox_4)
@@ -280,13 +287,13 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.groupBox_4)
 
 
-        self.retranslateUi(Dialog)
+        self.retranslateUi(RepByCat)
 
-        QMetaObject.connectSlotsByName(Dialog)
+        QMetaObject.connectSlotsByName(RepByCat)
     # setupUi
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("RepByCat", u"RepByCat", None))
+    def retranslateUi(self, RepByCat):
+        RepByCat.setWindowTitle(QCoreApplication.translate("RepByCat", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0442\u043e\u0432\u0430\u0440", None))
         self.groupBox_3.setTitle("")
         self.groupBox.setTitle("")
         self.article.setTitle("")

@@ -124,6 +124,8 @@ class Data(QMainWindow):
         self._ui.add_courier.clicked.connect(self.add_courier)
         self._ui.add_product.clicked.connect(self.add_product)
 
+        self._ui.exit.triggered.connect(self.close)
+
     def current_table_changed(self):
         self.current_table = get_key_by_value(LOCALIZED_TABLES_NAMES, self._ui.tables.currentText())
         self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)

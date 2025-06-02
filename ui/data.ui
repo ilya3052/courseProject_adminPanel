@@ -290,7 +290,7 @@
     <addaction name="summary"/>
     <addaction name="reports"/>
     <addaction name="separator"/>
-    <addaction name="action_5"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -325,7 +325,7 @@
     <string>Ctrl+3</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="exit">
    <property name="text">
     <string>Выход</string>
    </property>

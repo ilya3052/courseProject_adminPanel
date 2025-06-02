@@ -20,14 +20,14 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QGraphicsView,
     QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
     QWidget)
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        if not Dialog.objectName():
-            Dialog.setObjectName(u"RepByCat")
-        Dialog.resize(740, 768)
-        self.verticalLayout = QVBoxLayout(Dialog)
+class Ui_RepByCat(object):
+    def setupUi(self, RepByCat):
+        if not RepByCat.objectName():
+            RepByCat.setObjectName(u"RepByCat")
+        RepByCat.resize(740, 768)
+        self.verticalLayout = QVBoxLayout(RepByCat)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.groupBox = QGroupBox(Dialog)
+        self.groupBox = QGroupBox(RepByCat)
         self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setStyleSheet(u"QGroupBox {border: none;}")
         self.gridLayout = QGridLayout(self.groupBox)
@@ -40,7 +40,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.groupBox)
 
-        self.groupBox_2 = QGroupBox(Dialog)
+        self.groupBox_2 = QGroupBox(RepByCat)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.groupBox_2.setStyleSheet(u"QGroupBox {border: none;}")
         self.horizontalLayout = QHBoxLayout(self.groupBox_2)
@@ -96,13 +96,13 @@ class Ui_Dialog(object):
         self.verticalLayout.setStretch(0, 5)
         self.verticalLayout.setStretch(1, 1)
 
-        self.retranslateUi(Dialog)
+        self.retranslateUi(RepByCat)
 
-        QMetaObject.connectSlotsByName(Dialog)
+        QMetaObject.connectSlotsByName(RepByCat)
     # setupUi
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("RepByCat", u"RepByCat", None))
+    def retranslateUi(self, RepByCat):
+        RepByCat.setWindowTitle(QCoreApplication.translate("RepByCat", u"\u041e\u0442\u0447\u0435\u0442 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438", None))
         self.groupBox.setTitle("")
         self.groupBox_2.setTitle("")
         self.groupBox_3.setTitle("")
