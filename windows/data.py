@@ -128,7 +128,6 @@ class Data(QMainWindow):
 
     def current_table_changed(self):
         self.current_table = get_key_by_value(LOCALIZED_TABLES_NAMES, self._ui.tables.currentText())
-        self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
         self.fill_search_field()
         self.fill_display_columns()
         self.show_all_column()
@@ -150,6 +149,8 @@ class Data(QMainWindow):
                 data = cur.execute(query).fetchall()
             self.data = [[item if isinstance(item, bool) or item is not None else 'Не установлено' for item in row] for
                          row in data]
+
+            self._ui.data_table.cellChanged.disconnect(self.cell_value_changed)
 
             self.clear_table()
 
@@ -488,15 +489,7 @@ class Data(QMainWindow):
         chats_id = get_chats_id()
 
         if not isinstance(chats_id, list):
-            e = chats_id
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Critical)
-            msg.setWindowTitle("Ошибка")
-            msg.setText("Произошла ошибка при попытке получения данных")
-            msg.setStandardButtons(QMessageBox.Ok)
-
-            msg.setDetailedText("Подробную информацию смотрите в логах")
-            msg.exec()
+            chats_id = []
 
         stub_of_chat_id = randint(-2 ** 63, 2 ** 63 - 1)
 

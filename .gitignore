@@ -1,8 +1,8 @@
 .env
-.log
+*.log
 /.venv/
 /logs/
 __*__
 /.idea/
-.pdf
-.png
+*.pdf
+*.png

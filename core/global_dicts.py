@@ -16,7 +16,7 @@ LOCALIZED_COLUMNS_NAME = {
         "user_surname": "Фамилия",
         "user_patronymic": "Отчество",
         "user_phonenumber": "Номер телефона",
-        "user_tg_username": "Юзернейм",
+        "user_shortlink": "Юзернейм",
     },
     "client": {
         "client_id": "ID клиента",

@@ -112,6 +112,7 @@ JOIN product p ON a.product_article = p.product_article;"""
                               f"Подробности: {p.diag.message_detail}\n"
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
+            return
 
         msg = (f"Общая информация о заказах\n"
                f"Общее количество заказов в системе: {count_of_deliveries}\n"
@@ -187,6 +188,7 @@ UNION ALL SELECT COUNT(*) FROM courier WHERE courier_rating < 4.10;
                               f"Подробности: {p.diag.message_detail}\n"
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
+            return
 
         data = [item[0] for item in data]
 
@@ -216,6 +218,7 @@ WHERE c.courier_rating < 4.10;"""
                               f"Подробности: {p.diag.message_detail}\n"
                               f"Полный текст ошибки: {str(p)}\n"
                               f"---------------------------------------")
+            return
 
         if not data:
             self._ui.problematic_couriers_summary.clear()
