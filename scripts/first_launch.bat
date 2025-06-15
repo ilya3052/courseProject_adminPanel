@@ -11,7 +11,6 @@ echo @echo off > run.bat
 echo chcp 65001 >> run.bat
 echo call .venv\Scripts\activate.bat >> run.bat
 echo python main.py >> run.bat
-echo pause >> run.bat
 
 if not exist ".env" (
     copy .env.example .env 2>nul
